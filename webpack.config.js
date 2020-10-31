@@ -11,6 +11,8 @@ const filename = (ext) => {
   return isProduction ? `bundle.[fullhash].${ext}` : `bundle.${ext}`;
 };
 
+console.log(path.join(__dirname, 'src/html'));
+
 const getJsLoaders = () => {
   const loaders = [
     {
@@ -47,12 +49,16 @@ module.exports = {
   },
   devtool: isDevelopment ? 'source-map' : false,
   devServer: {
+    contentBase: path.resolve(__dirname, 'src/index'),
+    watchContentBase: true,
     port: 3000,
+    hot: true,
+    open: true,
   },
   plugins: [
     new CleanWebpackPlugin(),
     new HTMLWebpackPlugin({
-      template: 'index.html',
+      template: 'index/index.html',
       scriptLoading: 'blocking',
       minify: {
         removeComments: isProduction,

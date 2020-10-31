@@ -1,0 +1,35 @@
+.excel{
+  position: relative;
+  color: #888;
+  height: 100%;
+  max-width: 100%;
+  font-size: .8rem;
+
+  &__header {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+  }
+
+  &__toolbar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: $header-height;
+  }
+
+  &__formula {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: $header-height + $toolbar-height;
+  }
+
+  &__table {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: $header-height + $toolbar-height + $formula-height;
+  }
+}
