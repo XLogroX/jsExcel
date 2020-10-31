@@ -1,0 +1,33 @@
+.header {
+  height: $header-height;
+  padding: 8px 4px 0;
+  display: flex;
+  justify-content: space-between;
+
+  &__input {
+    margin: 0;
+    padding: 2px 7px;
+    min-width: 1px;
+    color: black;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    height: 20px;
+    font-size: 18px;
+    line-height: 22px;
+    outline: none;
+
+    &:hover {
+      border: 2px solid $border-color;
+      padding: 2px 6px;
+    }
+
+    &:focus {
+      border: 1px solid #1a73e8;
+      padding: 2px 7px;
+    }
+  }
+
+  &__button {
+    @include button(red);
+  }
+}
