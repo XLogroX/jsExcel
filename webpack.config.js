@@ -8,7 +8,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 const isDevelopment = !isProduction;
 
 const filename = (ext) => {
-  return isProduction ? `bundle.[fullhash].${ext}` : `bundle.${ext}`;
+  return isProduction ? `bundle.[hash].${ext}` : `bundle.${ext}`;
 };
 
 console.log(path.join(__dirname, 'src/html'));
@@ -19,6 +19,7 @@ const getJsLoaders = () => {
       loader: 'babel-loader',
       options: {
         presets: ['@babel/preset-env'],
+        plugins: ['@babel/plugin-proposal-class-properties'],
       },
     },
   ];
@@ -51,7 +52,7 @@ module.exports = {
   devServer: {
     contentBase: path.resolve(__dirname, 'src/index'),
     watchContentBase: true,
-    port: 3000,
+    port: 4000,
     hot: true,
     open: true,
   },
