@@ -3,22 +3,30 @@ const CODES = {
   Z: 90,
 };
 
-const createCol = function(colName) {
+const createCol = function(colName, index) {
   return (
-    `<div class="table__column">${colName}</div>`
+    `<div class="table__column" data-type="resizable" data-col="${index}">
+    ${colName}
+    <div class="table__col-resize" data-resize='col'></div>
+    </div>`
   );
 };
 
-const createCell = function() {
+const createCell = function(_, index) {
   return (
-    `<div class="table__cell" contenteditable></div>`
+    `<div class="table__cell" contenteditable data-col="${index}"></div>`
   );
 };
 
 const createRow = function(index, content) {
+  const resizer = index ? (`<div class="table__row-resize"
+   data-resize='row'></div>`) : ``;
   return (
-    `<div class="table__row">
-      <div class="table__row-info">${index ? index : ''}</div>
+    `<div class="table__row" data-type="resizable">
+      <div class="table__row-info">
+      ${index ? index : ''}
+      ${resizer}
+      </div>
       <div class="table__data">${content}</div>
     </div>`
   );
@@ -39,6 +47,7 @@ const createTable = function(rowsCount = 15) {
 
   const cells = new Array(colsCount)
       .fill()
+      .map(toChar)
       .map(createCell)
       .join('');
 
@@ -53,24 +62,3 @@ const createTable = function(rowsCount = 15) {
 };
 
 export {createTable};
-{/* <div class="table__row">
-      <div class="table__row-info">
-
-      </div>
-      <div class="table__data">
-        <div class="table__column">A</div>
-        <div class="table__column">B</div>
-        <div class="table__column">C</div>
-      </div>
-    </div>
-
-    <div class="table__row">
-      <div class="table__row-info">
-        1
-      </div>
-      <div class="table__data">
-        <div class="table__cell table__cell--selected">1</div>
-        <div class="table__cell">2</div>
-        <div class="table__cell">3</div>
-      </div>
-    </div> */}
