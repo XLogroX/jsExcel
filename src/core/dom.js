@@ -38,6 +38,35 @@ class Dom {
 
     return this;
   }
+
+  closest(selector) {
+    return $(this._$el.closest(selector));
+  }
+
+  getCoords() {
+    return this._$el.getBoundingClientRect();
+  }
+
+  get data() {
+    return this._$el.dataset;
+  }
+
+  findAll(selector) {
+    return this._$el.querySelectorAll(selector);
+  }
+
+  css(styles = {}) {
+    Object.keys(styles).forEach((key) => {
+      if (styles[key] === null) {
+        this._$el.style[key] = null;
+      } else {
+        this._$el.style[key] = styles[key];
+      }
+    });
+    if (!this._$el.getAttribute('style')) {
+      this._$el.removeAttribute('style');
+    }
+  }
 }
 
 const $ = function(selector) {
