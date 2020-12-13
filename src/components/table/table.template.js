@@ -12,10 +12,12 @@ const createCol = function(colName, index) {
   );
 };
 
-const createCell = function(_, index) {
-  return (
-    `<div class="table__cell" contenteditable data-col="${index}"></div>`
-  );
+const createCell = function(row) {
+  return function(_, col) {
+    return (
+      `<div class="table__cell" contenteditable data-type="cell" data-col="${col}" data-id="${row}:${col}"></div>`
+    );
+  };
 };
 
 const createRow = function(index, content) {
@@ -45,16 +47,15 @@ const createTable = function(rowsCount = 15) {
       .map(createCol)
       .join('');
 
-  const cells = new Array(colsCount)
-      .fill()
-      .map(toChar)
-      .map(createCell)
-      .join('');
-
-
   rows.push(createRow(null, cols));
 
   for (let i = 0; i < rowsCount; i++) {
+    const cells = new Array(colsCount)
+        .fill()
+        .map(toChar)
+        .map(createCell(i))
+        .join('');
+
     rows.push(createRow(i + 1, cells));
   }
 
