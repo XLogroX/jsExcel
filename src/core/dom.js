@@ -12,6 +12,15 @@ class Dom {
     return this._$el.outerHTML.trim();
   }
 
+  text(text) {
+    if (typeof text === 'string') {
+      this._$el.textContent = text;
+      return this;
+    }
+
+    return this._$el.textContent.trim();
+  }
+
   clear() {
     this.html('');
     return this;
@@ -51,8 +60,38 @@ class Dom {
     return this._$el.dataset;
   }
 
+  focus() {
+    this._$el.focus();
+  }
+
+  id(parse) {
+    if (parse) {
+      const id = this.id();
+      const parsed = id.split(':');
+      return {
+        row: +parsed[0],
+        col: +parsed[1],
+      };
+    }
+    return this.data.id;
+  }
+
   findAll(selector) {
     return this._$el.querySelectorAll(selector);
+  }
+
+  find(selector) {
+    return $(this._$el.querySelector(selector));
+  }
+
+  addClass(className) {
+    this._$el.classList.add(className);
+    return this;
+  }
+
+  removeClass(className) {
+    this._$el.classList.remove(className);
+    return this;
   }
 
   css(styles = {}) {
