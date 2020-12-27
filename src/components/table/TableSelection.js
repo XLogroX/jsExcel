@@ -22,6 +22,12 @@ class TableSelection {
     });
   }
 
+  get selectedIds() {
+    return this.group.map((cell) => {
+      return cell.id();
+    });
+  }
+
   _clear() {
     if (this.group.length !== 0) {
       this.group.forEach((cell) => {
@@ -30,6 +36,12 @@ class TableSelection {
     }
 
     this.group = [];
+  }
+
+  applyStyle(style) {
+    this.group.forEach(($el) => {
+      $el.css(style);
+    });
   }
 }
 

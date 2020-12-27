@@ -1,5 +1,8 @@
+import {DEFAULT_STYLES} from '../../constants';
 import $ from '../../core/dom';
 import ExcelComponent from '../../core/ExcelComponent';
+import {parse} from '../../core/parse';
+import * as actions from '../../redux/actions';
 import {getNextSelector, isCell, matrix, shouldResize} from './table.functions';
 import {resizeHandler} from './table.resize';
 import {createTable} from './table.template';
@@ -21,7 +24,7 @@ class Table extends ExcelComponent {
   }
 
   getHtmlTemplate() {
-    return createTable();
+    return createTable(15, this._store.getState());
   }
 
   init() {
@@ -29,12 +32,24 @@ class Table extends ExcelComponent {
     const selectedCell = this._$root.find('[data-id="0:0"]');
     this.selectCell(selectedCell);
 
-    this.$on('formula:input', (text) => {
-      this._selection._currentCell.text(text);
+    this.$on('formula:input', (value) => {
+      this._selection._currentCell
+          .attr('data-value', value)
+          .text(parse(value));
+
+      this.updateTextInStore(value);
     });
 
     this.$on('formula:enterPress', () => {
       this._selection._currentCell.focus();
+    });
+
+    this.$on('toolbar:applyStyle', (value) => {
+      this._selection.applyStyle(value);
+      this.$dispatch(actions.applyStyle({
+        value,
+        ids: this._selection.selectedIds,
+      }));
     });
   }
 
@@ -58,11 +73,22 @@ class Table extends ExcelComponent {
   selectCell(cell) {
     this._selection.select(cell);
     this.$emit('table:select', cell);
+    const styles = cell.getStyles(Object.keys(DEFAULT_STYLES));
+    this.$dispatch(actions.changeStyles(styles));
+  }
+
+  async _resizeTable(evt) {
+    try {
+      const data = await resizeHandler(evt, this._$root);
+      this.$dispatch(actions.tableResize(data));
+    } catch (err) {
+      console.warn(err);
+    }
   }
 
   onMousedown(evt) {
     if (shouldResize(evt)) {
-      resizeHandler(evt, this._$root);
+      this._resizeTable(evt);
     }
   }
 
@@ -86,8 +112,18 @@ class Table extends ExcelComponent {
     }
   }
 
+  updateTextInStore(value) {
+    const data = {
+      id: this._selection._currentCell.id(),
+      value,
+    };
+    this.$dispatch(actions.changeText(data));
+  }
+
   onInput(evt) {
-    this.$emit('table:input', $(evt.target));
+    // this.$emit('table:input', $(evt.target));
+    const text = $(evt.target).text();
+    this.updateTextInStore(text);
   }
 }
 

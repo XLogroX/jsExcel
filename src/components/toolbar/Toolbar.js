@@ -1,41 +1,41 @@
-import ExcelComponent from '../../core/ExcelComponent';
+import $ from '../../core/dom';
+import ExcelStateComponent from '../../core/ExcelStateComponent';
+import {createToolbar} from './toolbar.template';
 
-class Toolbar extends ExcelComponent {
+class Toolbar extends ExcelStateComponent {
   static className = ['excel__toolbar', 'toolbar'];
 
   constructor($root, options) {
     super($root, {
       name: 'Toolbar',
       ...options,
+      listeners: ['click'],
+      subscribe: ['currentStyles'],
     });
   }
 
+  get template() {
+    return createToolbar(this.state);
+  }
+
+  prepare() {
+    this.initState(this._store.getState().currentStyles);
+  }
+
   getHtmlTemplate() {
-    return (
-      `<button type="button" class="toolbar__button">
-      <i class="material-icons">format_align_left</i>
-    </button>
+    return this.template;
+  }
 
-    <button type="button" class="toolbar__button">
-      <i class="material-icons">format_align_center</i>
-    </button>
+  storeChanged(changes) {
+    this.setState(changes.currentStyles);
+  }
 
-    <button type="button" class="toolbar__button">
-      <i class="material-icons">format_align_right</i>
-    </button>
-
-    <button type="button" class="toolbar__button">
-      <i class="material-icons">format_bold</i>
-    </button>
-
-    <button type="button" class="toolbar__button">
-      <i class="material-icons">format_italic</i>
-    </button>
-    
-    <button type="button" class="toolbar__button">
-      <i class="material-icons">format_underlined</i>
-    </button>`
-    );
+  onClick(evt) {
+    if (evt.target.closest('[data-type="button"]')) {
+      const target = $(evt.target.closest('[data-type="button"]'));
+      const value = JSON.parse(target.data.value);
+      this.$emit('toolbar:applyStyle', value);
+    }
   }
 }
 
