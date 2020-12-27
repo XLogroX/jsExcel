@@ -13,7 +13,7 @@ class Dom {
   }
 
   text(text) {
-    if (typeof text === 'string') {
+    if (typeof text !== 'undefined') {
       this._$el.textContent = text;
       return this;
     }
@@ -105,6 +105,21 @@ class Dom {
     if (!this._$el.getAttribute('style')) {
       this._$el.removeAttribute('style');
     }
+  }
+
+  getStyles(styles = []) {
+    return styles.reduce((acc, style) => {
+      acc[style] = this._$el.style[style];
+      return acc;
+    }, {});
+  }
+
+  attr(name, value) {
+    if (value || value === '') {
+      this._$el.setAttribute(name, value);
+      return this;
+    }
+    return this._$el.getAttribute(name);
   }
 }
 

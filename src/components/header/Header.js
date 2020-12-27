@@ -1,4 +1,6 @@
 import ExcelComponent from '../../core/ExcelComponent';
+import {createHeaderTemplate} from './header.template';
+import * as actions from '../../redux/actions';
 
 class Header extends ExcelComponent {
   static className = ['excel__header', 'header'];
@@ -7,23 +9,17 @@ class Header extends ExcelComponent {
     super($root, {
       name: 'Header',
       ...options,
+      listeners: ['input'],
+      subscribe: ['headerText'],
     });
   }
 
   getHtmlTemplate() {
-    return (
-      `<input class="header__input" type="text" value="Новая таблица">
+    return createHeaderTemplate(this._store.getState());
+  }
 
-        <div>
-          <button type="button" class="header__button">
-            <i class="material-icons">delete</i>
-          </button>
-
-          <button type="button" class="header__button">
-            <i class="material-icons">exit_to_app</i>
-          </button>
-      </div>`
-    );
+  onInput(evt) {
+    this.$dispatch(actions.changeName(evt.target.value));
   }
 }
 

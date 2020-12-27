@@ -9,6 +9,7 @@ class Formula extends ExcelComponent {
       name: 'Formula',
       listeners: ['input', 'keydown'],
       ...options,
+      subscribe: ['currentText'],
     });
   }
 
@@ -25,12 +26,19 @@ class Formula extends ExcelComponent {
     this._$formula = this._$root.find('[data-type="formula-field"]');
 
     this.$on('table:select', (cell) => {
-      this._$formula.text(cell.text());
+      this._$formula.text(cell.data.value);
     });
 
-    this.$on('table:input', ($cell) => {
-      this._$formula.text($cell.text());
-    });
+    // this.$on('table:input', ($cell) => {
+    //   this._$formula.text($cell.text());
+    // });
+    // this.$subscribe((state) => {
+    //   this._$formula.text(state.currentText);
+    // });
+  }
+
+  storeChanged({currentText}) {
+    this._$formula.text(currentText);
   }
 
   onInput(evt) {
